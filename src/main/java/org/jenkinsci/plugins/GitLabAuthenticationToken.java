@@ -112,17 +112,7 @@ public class GitLabAuthenticationToken extends AbstractAuthenticationToken {
 			if (myRealm == null) {
 				myRealm = (GitLabSecurityRealm) jenkins.getSecurityRealm();
 			}
-			// Search for scopes that allow fetching team membership. This is
-			// documented online.
-			// https://developer.gitlab.com/v3/orgs/#list-your-organizations
-			// https://developer.gitlab.com/v3/orgs/teams/#list-user-teams
-			List<GitlabGroup> myTeams = gitLabAPI.getGroups();
-			for (GitlabGroup group : myTeams) {
-				LOGGER.log(Level.FINE, "Fetch teams for user " + userName + " in organization " + group.getName());
-				authorities.add(new GrantedAuthorityImpl(group.getName()));
-				authorities.add(new GrantedAuthorityImpl(
-						group + GitLabOAuthGroupDetails.ORG_TEAM_SEPARATOR + group.getName()));
-			}
+
 		}
 	}
 

@@ -336,16 +336,6 @@ public class GitLabSecurityRealm extends SecurityRealm implements UserDetailsSer
             GitLabAuthenticationToken auth = new GitLabAuthenticationToken(accessToken, getGitlabApiUri(), TokenType.ACCESS_TOKEN);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            GitlabUser self = auth.getMyself();
-            User user = User.current();
-            if (user != null) {
-                user.setFullName(self.getName());
-                // Set email from gitlab only if empty
-                if (!user.getProperty(Mailer.UserProperty.class).hasExplicitlyConfiguredAddress()) {
-                    user.addProperty(new Mailer.UserProperty(auth.getMyself().getEmail()));
-                }
-            }
-            SecurityListener.fireAuthenticated(new GitLabOAuthUserDetails(self, auth.getAuthorities()));
         } else {
             Log.info("Gitlab did not return an access token.");
         }
